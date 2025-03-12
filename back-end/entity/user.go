@@ -16,4 +16,5 @@ type User struct {
 	Password  string    `json:"-"`
 	Role      Role      `json:"role"`
 	CreatedAt time.Time `json:"created_at"`
+	Course    string    `json:"course"`
 }
