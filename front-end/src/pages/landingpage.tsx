@@ -1,83 +1,107 @@
-import { Calendar} from 'lucide-react';
-import 'react'
+// App.tsx
+import React, { useState } from 'react';
+import { LogIn, X } from 'lucide-react';
+import Header from '../components/landing/header';
+import Hero from '../components/landing/hero';
+import Features from '../components/landing/features';
+// import Testimonials from '../components/landing/testimonials';
+import Contact from '../components/landing/contact';
+import Footer from '../components/landing/footer';
 
-function LandingPage() {
+// Componente de Login Modal
+const LoginModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
   return (
-    <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
-      {/* Header */}
-      <header className="bg-white shadow-sm w-full">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
+      <div className="bg-gray-900 rounded-xl p-6 w-full max-w-md border border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-white">Login</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-white">
+            <X size={24} />
+          </button>
+        </div>
+
+        <form className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-gray-300 mb-2">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="w-full bg-gray-800 border border-gray-700 focus:border-yellow-500 rounded-lg p-3 text-white outline-none transition-colors"
+              placeholder="seu@email.com"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-gray-300 mb-2">Senha</label>
+            <input
+              type="password"
+              id="password"
+              className="w-full bg-gray-800 border border-gray-700 focus:border-yellow-500 rounded-lg p-3 text-white outline-none transition-colors"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <a  href="#"className="text-2xl font-light tracking-tight">
-                <span className="font-medium">Uni</span>
-                <span className="text-yellow-600">Time</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16">
-          <div className="mb-8 flex justify-center">
-            <div className="w-24 h-24 rounded-full bg-yellow-600 flex items-center justify-center">
-              <Calendar size={48} className="text-white" />
-            </div>
-          </div>
-          
-          <h1 className="text-4xl sm:text-5xl font-light mb-6">
-            <span className="font-medium">Site em </span>
-            <span className="text-yellow-600">Construção</span>
-          </h1>
-          
-          <p className="text-gray-600 text-xl mb-10 max-w-xl mx-auto">
-            Estamos trabalhando para trazer a melhor experiência de gestão acadêmica para você.
-          </p>
-
-          {/* <div className="bg-white p-8 rounded-lg shadow-lg mb-10">
-            <h2 className="text-2xl font-medium mb-4">Seja notificado quando lançarmos</h2>
-            <p className="text-gray-600 mb-6">
-              Deixe seu email para receber atualizações sobre o lançamento do UniTime.
-            </p>
-            
-            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input 
-                type="email" 
-                placeholder="Seu email" 
-                className="flex-grow p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              <input
+                type="checkbox"
+                id="remember"
+                className="w-4 h-4 bg-gray-800 border-gray-700 rounded focus:ring-yellow-500"
               />
-              <button 
-                type="submit" 
-                className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-md transition duration-300"
-              >
-                Notifique-me
-              </button>
-            </form>
-          </div> */}
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-center items-center">
-            <div className="mb-4 md:mb-0">
-              <div className="text-xl font-light text-white">
-                <span className="font-medium">Uni</span>
-                <span className="text-yellow-500">Time</span>
-              </div>
+              <label htmlFor="remember" className="ml-2 text-sm text-gray-300">Lembrar-me</label>
             </div>
+            <a href="#" className="text-sm text-yellow-500 hover:text-yellow-400">Esqueceu a senha?</a>
           </div>
-          
-          <div className="mt-4 text-sm text-center ">
-            <p>&copy; {new Date().getFullYear()} UniTime. Todos os direitos reservados.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  )
-}
 
+          <button
+            type="submit"
+            className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-3 rounded-lg font-medium transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:shadow-[0_0_20px_rgba(234,179,8,0.4)]"
+          >
+            Entrar
+          </button>
+
+          <div className="text-center text-gray-400 text-sm">
+            Não tem uma conta? <a href="#" className="text-yellow-500 hover:text-yellow-400">Cadastre-se</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// App Principal
+const LandingPage: React.FC = () => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      <Header />
+      <main>
+        <Hero />
+        <Features />
+        {/* <Testimonials /> */}
+        <Contact />
+      </main>
+      <Footer />
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+
+      {/* Botão de login flutuante */}
+      <button
+        className="fixed bottom-8 right-8 bg-gray-600 text-gray-300 p-4 rounded-full shadow-lg transition-colors shadow-[0_0_15px_rgba(234,179,8,0.3)] group  cursor-not-allowed z-40"
+      // onClick={() => setIsLoginModalOpen(true)}
+      >
+        <LogIn size={24} />
+        <span className="absolute -top-10 -left-20 right-0  bg-gray-800 text-yellow-500 text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+          Em breve disponível
+        </span>
+      </button>
+
+    
+    </div>
+  );
+};
+
+// Exporte o componente App
 export default LandingPage;
