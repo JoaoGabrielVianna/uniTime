@@ -1,39 +1,19 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/joaogabrielvianna/controller"
 )
 
 func CourseRoutes(r *gin.Engine) {
 	// Grupo de rotas para users
-	courseRoutes := r.Group("/courses")
+	CourseRoutes := r.Group("/courses")
 	{
-		courseRoutes.POST("/create", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{
-				"message": "CreateCourse",
-			})
-		})
-		courseRoutes.GET("/", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{
-				"message": "GetCourses",
-			})
-		})
-		courseRoutes.GET("/:id", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{
-				"message": "GetCourseByID",
-			})
-		})
-		courseRoutes.PUT("/:id", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{
-				"message": "UpdateCourse",
-			})
-		})
-		courseRoutes.DELETE("/:id", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{
-				"message": "DeleteCourse",
-			})
-		})
+		CourseRoutes.POST("/create", controller.CreateCourse)
+		CourseRoutes.GET("/", controller.GetCourses)
+		CourseRoutes.GET("/:id", controller.GetCoursesById)
+		CourseRoutes.PUT("/:id", controller.UpdateCourse)
+		CourseRoutes.POST("/:id/add-year", controller.AddYearToCourse)
+		CourseRoutes.DELETE("/:id", controller.DeleteCourse)
 	}
 }
