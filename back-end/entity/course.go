@@ -2,16 +2,11 @@ package entity
 
 import "time"
 
-type Year struct {
-	ID       string `json:"id"`
-	Year     int    `json:"year"`
-	Teachers []User `json:"teachers"`
-	Students []User `json:"students"`
-}
 type Course struct {
-	ID          string    `json:"id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Years       []Year    `json:"years"`
-	CreatedAt   time.Time `json:"created-at"`
+	ID          string    `json:"id" gorm:"primaryKey"`
+	Name        string    `json:"name" gorm:"type:varchar(100)"`
+	Description string    `json:"description" gorm:"type:text"`
+	Years       []Year    `json:"years" gorm:"foreignKey:CourseID"`
+	Users       []User    `json:"users" gorm:"foreignKey:CourseID"`
+	CreatedAt   time.Time `json:"created-at" gorm:"autoCreateTime"`
 }
