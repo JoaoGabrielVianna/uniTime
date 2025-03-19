@@ -27,7 +27,7 @@ func ConnectDataBase() {
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PORT"),
 	)
-	fmt.Println(dsn, "teste")
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Erro ao conectar ao banco:", err)
