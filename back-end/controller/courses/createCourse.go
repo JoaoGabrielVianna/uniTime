@@ -29,7 +29,7 @@ func CreateCourse(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Usuário criado com sucesso",
+		"message": "Curso criado com sucesso",
 		"course":  createCourse,
 	})
 }
