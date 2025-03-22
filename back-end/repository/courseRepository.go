@@ -40,8 +40,13 @@ func UpdateCourse(id string, updateCourse entity.Course) (*entity.Course, error)
 		return nil, err
 	}
 
-	course.Name = updateCourse.Name
-	course.Description = updateCourse.Description
+	if updateCourse.Name != "" {
+		course.Name = updateCourse.Name
+	}
+
+	if updateCourse.Description != "" {
+		course.Description = updateCourse.Description
+	}
 
 	if err := db.DB.Save(&course).Error; err != nil {
 		return nil, err

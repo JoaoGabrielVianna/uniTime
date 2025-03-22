@@ -13,9 +13,12 @@ func DeleteCourse(c *gin.Context) {
 
 	_, err := repository.DeleteCourse(id)
 	if err != nil {
+		logger.ErrorLog("Erro ao tentar deletar o curso com ID " + id + ": " + err.Error())
 		c.JSON(http.StatusNotFound, gin.H{"message": "Curso não encontrado"})
 		return
 	}
+
+	logger.SuccessLog("Curso com ID " + id + " deletado com sucesso")
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
