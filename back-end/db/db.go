@@ -2,9 +2,9 @@ package db
 
 import (
 	"fmt"
-	"log"
 	"os"
 
+	"github.com/joaogabrielvianna/config"
 	"github.com/joaogabrielvianna/entity"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -13,11 +13,12 @@ import (
 
 var DB *gorm.DB
 
-func ConnectDataBase() {
+func ConnectDataBase() error {
+	logger := config.GetLogger("PostgreSQL")
 
 	err := godotenv.Load("./.env") // Exemplo: "./config/.env"
 	if err != nil {
-		log.Fatalf("Erro ao carregar o arquivo .env: %v", err)
+		logger.ErrorLog(fmt.Sprintf("Erro ao carregar o arquivo .env: %v", err))
 	}
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
@@ -30,11 +31,11 @@ func ConnectDataBase() {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Erro ao conectar ao banco:", err)
+		logger.ErrorLog(fmt.Sprintf("Erro ao conectar ao banco de dados: %v", err))
 	}
 
 	DB = db
-	fmt.Println("✅ Banco de dados conectado!")
+	logger.SuccessLog("Banco de dados conectado!")
 
 	db.AutoMigrate(
 		&entity.Course{},
@@ -42,4 +43,23 @@ func ConnectDataBase() {
 		&entity.User{},
 	)
 
+	// Resetar o contador do auto-incremento
+	err = ResetAutoIncrement(db) // Passando o db do GORM
+	if err != nil {
+		logger.ErrorLog(fmt.Sprintf("Erro ao resetar o auto-incremento: %v", err))
+		return err
+	}
+	return nil
+}
+
+func ResetAutoIncrement(db *gorm.DB) error {
+	// Resetando o contador do SERIAL no PostgreSQL
+	// Para PostgreSQL, use a sequência do campo de ID
+	query := "ALTER SEQUENCE users_id_seq RESTART WITH 1"
+	// Usando o método Exec do GORM
+	result := db.Exec(query)
+	if result.Error != nil {
+		return fmt.Errorf("erro ao resetar o auto-incremento: %v", result.Error)
+	}
+	return nil
 }
