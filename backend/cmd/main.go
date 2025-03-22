@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+
 	// Inicializar o logger
 	logger := config.GetLogger("Main")
 
