@@ -1,23 +1,33 @@
 package users
 
 import (
+	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joaogabrielvianna/repository"
 )
 
-// Function para obter o user por ID
+// Função para obter o usuário por ID
 func GetUserById(c *gin.Context) {
-	idStr := c.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id := c.Param("id")
+	// id, err := strconv.Atoi(idStr) // O erro da conversão agora é tratado
+	// if err != nil {
+	// 	logger.ErrorLog(fmt.Sprintf("Erro ao converter ID para inteiro: %v", err))
+	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "ID inválido"})
+	// 	return
+	// }
+
 	user, err := repository.GetUserById(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Curso não encontrado"})
+		// Log de erro, quando o usuário não é encontrado
+		logger.ErrorLog(fmt.Sprintf("Erro ao buscar o usuário com ID %s: %v", id, err))
+		c.JSON(http.StatusNotFound, gin.H{"message": "Usuário não encontrado"})
 		return
 	}
 
-	c.JSON(http.StatusNotFound, gin.H{"user": user})
+	// Log de sucesso, indicando que o usuário foi encontrado com sucesso
+	logger.SuccessLog(fmt.Sprintf("Usuário com ID %s encontrado", id))
 
+	c.JSON(http.StatusOK, gin.H{"user": user})
 }

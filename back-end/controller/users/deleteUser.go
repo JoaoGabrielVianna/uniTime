@@ -15,9 +15,12 @@ func DeleteUser(c *gin.Context) {
 	_, err := repository.DeleteUser(id)
 	fmt.Println("ERRO MEU------------------", err, "ID", id)
 	if err != nil {
+		logger.ErrorLog(fmt.Sprintf("Erro ao deletar o usuário com ID %s: %v", id, err))
 		c.JSON(http.StatusNotFound, gin.H{"message": "User não encontrado"})
 		return
 	}
+
+	logger.SuccessLog(fmt.Sprintf("Usuário com ID %s deletado com sucesso", id))
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",

@@ -9,6 +9,15 @@ var Users []entity.User
 
 // Função para adicionar um usuário ao repositório
 func CreateUser(user entity.User) (entity.User, error) {
+	// Contar o número de usuários existentes no banco
+	var count int64
+	if err := db.DB.Model(&entity.User{}).Count(&count).Error; err != nil {
+		return entity.User{}, err
+	}
+
+	// Definir o ID do usuário com base na quantidade atual de usuários
+	user.ID = int(count + 1) // Conversão explícita de int64 para int
+
 	if err := db.DB.Create(&user).Error; err != nil {
 		return entity.User{}, err
 	}
@@ -25,10 +34,10 @@ func GetUsers() ([]entity.User, error) {
 }
 
 // Função para buscar um usuário por ID
-func GetUserById(id int) (*entity.User, error) {
+func GetUserById(id string) (*entity.User, error) {
 	var user *entity.User
 
-	if err := db.DB.Where("id = ?").First(&user).Error; err != nil {
+	if err := db.DB.First(&user, "id=?", id).Error; err != nil {
 		return nil, err
 	}
 
@@ -36,15 +45,30 @@ func GetUserById(id int) (*entity.User, error) {
 }
 
 // Função para atualizar um usuário
-func UpdateUser(id int, updateUser entity.User) (*entity.User, error) {
+func UpdateUser(id string, updateUser entity.User) (*entity.User, error) {
 	var user entity.User
 
-	if err := db.DB.Where("id = ?").First(&user).Error; err != nil {
-		return nil, err
+	// Buscar o usuário no banco de dados usando o ID
+	result := db.DB.First(&user, "id = ?", id)
+	if result.Error != nil {
+		return nil, result.Error // Se o usuário não for encontrado, retorna erro
 	}
 
-	user.Name = updateUser.Name
-	user.Email = updateUser.Email
+	if updateUser.Name != "" {
+		user.Name = updateUser.Name
+	}
+	if updateUser.Email != "" {
+		user.Email = updateUser.Email
+	}
+	if updateUser.Role != "" {
+		user.Role = updateUser.Role
+	}
+	if updateUser.Course != nil { // Verifica se o campo "course" não é nil
+		user.Course = updateUser.Course
+	}
+	if updateUser.CourseID != "" {
+		user.CourseID = updateUser.CourseID
+	}
 
 	if err := db.DB.Save(&user).Error; err != nil {
 		return nil, err
