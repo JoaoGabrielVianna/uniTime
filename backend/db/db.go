@@ -39,7 +39,9 @@ func ConnectDataBase() error {
 
 	db.AutoMigrate(
 		&entity.Course{},
-		&entity.Year{},
+		&entity.Course_year{},
+		&entity.Calendar{},
+		&entity.CalendarEvent{},
 		&entity.User{},
 	)
 
