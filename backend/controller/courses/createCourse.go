@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/joaogabrielvianna/entity"
 	"github.com/joaogabrielvianna/repository"
 )
@@ -19,6 +20,8 @@ func CreateCourse(c *gin.Context) {
 		return
 	}
 
+	// Gerando o UUID para o ID do curso (se não estiver sendo gerado automaticamente)
+	course.ID = uuid.New() // Gerando o UUID automaticamente
 	// Adicionando a data
 	course.CreatedAt = time.Now()
 
@@ -30,7 +33,7 @@ func CreateCourse(c *gin.Context) {
 		return
 	}
 
-	logger.SuccessLog("Curso criado com sucesso com ID " + string(createCourse.ID))
+	logger.SuccessLog("Curso criado com sucesso com ID " + createCourse.ID.String())
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Curso criado com sucesso",

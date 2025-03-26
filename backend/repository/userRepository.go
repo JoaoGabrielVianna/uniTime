@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/google/uuid"
 	"github.com/joaogabrielvianna/db"
 	"github.com/joaogabrielvianna/entity"
 )
@@ -14,9 +15,6 @@ func CreateUser(user entity.User) (entity.User, error) {
 	if err := db.DB.Model(&entity.User{}).Count(&count).Error; err != nil {
 		return entity.User{}, err
 	}
-
-	// Definir o ID do usuário com base na quantidade atual de usuários
-	user.ID = int(count + 1) // Conversão explícita de int64 para int
 
 	if err := db.DB.Create(&user).Error; err != nil {
 		return entity.User{}, err
@@ -63,10 +61,8 @@ func UpdateUser(id string, updateUser entity.User) (*entity.User, error) {
 	if updateUser.Role != "" {
 		user.Role = updateUser.Role
 	}
-	if updateUser.Course != nil { // Verifica se o campo "course" não é nil
-		user.Course = updateUser.Course
-	}
-	if updateUser.CourseID != "" {
+
+	if updateUser.CourseID != uuid.Nil {
 		user.CourseID = updateUser.CourseID
 	}
 

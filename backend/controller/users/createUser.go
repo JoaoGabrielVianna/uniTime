@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/joaogabrielvianna/entity"
 	"github.com/joaogabrielvianna/repository"
 )
@@ -19,6 +20,8 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	// Gerando o UUID para o ID do curso (se não estiver sendo gerado automaticamente)
+	user.ID = uuid.New() // Gerando o UUID automaticamente
 	user.CreatedAt = time.Now()
 
 	createUser, err := repository.CreateUser(user)
