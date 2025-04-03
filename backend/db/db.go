@@ -39,7 +39,6 @@ func ConnectDataBase() error {
 
 	db.AutoMigrate(
 		&entity.Course{},
-		&entity.Course_year{},
 		&entity.Calendar{},
 		&entity.CalendarEvent{},
 		&entity.User{},
@@ -55,10 +54,16 @@ func ConnectDataBase() error {
 }
 
 func ResetAutoIncrement(db *gorm.DB) error {
-	// Resetando o contador do SERIAL no PostgreSQL
-	// Para PostgreSQL, use a sequência do campo de ID
+	// Verificar se a sequência existe antes de tentar resetá-la
+	var exists bool
+	queryCheck := "SELECT EXISTS (SELECT 1 FROM pg_class WHERE relname = 'users_id_seq')"
+	db.Raw(queryCheck).Scan(&exists)
+
+	if !exists {
+		return fmt.Errorf("a sequência users_id_seq não existe")
+	}
+
 	query := "ALTER SEQUENCE users_id_seq RESTART WITH 1"
-	// Usando o método Exec do GORM
 	result := db.Exec(query)
 	if result.Error != nil {
 		return fmt.Errorf("erro ao resetar o auto-incremento: %v", result.Error)

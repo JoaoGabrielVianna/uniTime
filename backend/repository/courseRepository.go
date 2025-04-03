@@ -44,8 +44,8 @@ func UpdateCourse(id string, updateCourse entity.Course) (*entity.Course, error)
 		course.Name = updateCourse.Name
 	}
 
-	if updateCourse.Description != "" {
-		course.Description = updateCourse.Description
+	if updateCourse.Acronym != "" {
+		course.Acronym = updateCourse.Acronym
 	}
 
 	if err := db.DB.Save(&course).Error; err != nil {
