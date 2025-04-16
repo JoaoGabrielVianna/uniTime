@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/joaogabrielvianna/entity"
 	"github.com/joaogabrielvianna/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func CreateUser(c *gin.Context) {
@@ -23,6 +24,19 @@ func CreateUser(c *gin.Context) {
 	// Gerando o UUID para o ID do curso (se não estiver sendo gerado automaticamente)
 	user.ID = uuid.New() // Gerando o UUID automaticamente
 	user.CreatedAt = time.Now()
+
+	// Criptografando a senha antes de salvar no banco de dados
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		logger.ErrorLog(fmt.Sprintf("Erro ao criptografar a senha: %s", err.Error()))
+		c.JSON(http.StatusInternalServerError, gin.H{"Error": "Erro interno ao criptografar a senha"})
+		return
+	}
+	logger.InfoLog(fmt.Sprintf("Senha original recebida: %s", user.Password))
+	// Atribuindo a senha criptografada ao usuário
+	user.Password = string(hashedPassword)
+
+	logger.InfoLog(fmt.Sprintf("Senha criptografada antes de salvar: %s", user.Password))
 
 	createUser, err := repository.CreateUser(user)
 	if err != nil {

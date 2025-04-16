@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Instala as dependências necessárias (com go mod tidy)
-RUN go mod tidy
+RUN go mod tidy 
 
 # Usa uma imagem mais leve para rodar a aplicação
 FROM golang:1.24.1

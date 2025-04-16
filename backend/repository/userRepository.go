@@ -42,6 +42,15 @@ func GetUserById(id string) (*entity.User, error) {
 	return user, nil
 }
 
+// GetUserByEmail retorna o usuário encontrado pelo email
+func GetUserByEmail(email string) (*entity.User, error) {
+	var user entity.User
+	if err := db.DB.Where("email = ?", email).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 // Função para atualizar um usuário
 func UpdateUser(id string, updateUser entity.User) (*entity.User, error) {
 	var user entity.User
